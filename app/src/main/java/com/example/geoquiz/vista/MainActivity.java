@@ -50,13 +50,7 @@ private Question []mQuestionBank;
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int messageResId;
-                if(verifyAnswer(true)){
-                    messageResId = R.string.correct_toast;
-                }else{
-                    messageResId = R.string.incorrect_toast;
-                }
-                Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+               checkAnswer(true);
             }
         });
     }
@@ -64,13 +58,7 @@ private Question []mQuestionBank;
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int messageResId;
-                if(verifyAnswer(false)){
-                    messageResId = R.string.correct_toast;
-                }else{
-                    messageResId = R.string.incorrect_toast;
-                }
-                Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+                checkAnswer(false);
             }
         });
     }
@@ -136,5 +124,14 @@ private Question []mQuestionBank;
     }
     public boolean verifyAnswer(boolean answer){
         return answer == mQuestionBank[mRandomNumber].isAnswerTrue();
+    }
+    public void checkAnswer(boolean answer){
+        int messageResId;
+        if(verifyAnswer(answer)){
+            messageResId = R.string.correct_toast;
+        }else{
+            messageResId = R.string.incorrect_toast;
+        }
+        Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
     }
 }
