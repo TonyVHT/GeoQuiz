@@ -44,6 +44,7 @@ private Question []mQuestionBank;
         mNextButton= (Button) findViewById(R.id.btn_next);
         clickNextButton();
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        clickTextViewQuestion();
         updateQuestion();
     }
     public void clickTrueButton(){
@@ -64,6 +65,14 @@ private Question []mQuestionBank;
     }
     public void clickNextButton(){
         mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuestion();
+            }
+        });
+    }
+    public void clickTextViewQuestion(){
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateQuestion();
