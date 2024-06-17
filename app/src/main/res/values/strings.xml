@@ -11,4 +11,37 @@
     <string name="question_africa">The source of the Nile River is in Egypt.</string>
     <string name="question_americas">The Amazon River is the longest river in the Americas.</string>
     <string name="question_asia">Lake Baikal is the world\'s oldest and deepest freshwater lake.</string>
+    <string name="question_europe">The Rhine River flows through Germany.</string>
+    <string name="question_antarctica">Antarctica is the coldest continent on Earth.</string>
+    <string name="question_australia">The Great Barrier Reef is located off the coast of Australia.</string>
+    <string name="question_space">Jupiter is the largest planet in our solar system.</string>
+    <string name="question_science">Water boils at 100 degrees Celsius at sea level.</string>
+    <string name="question_math">The sum of the angles in a triangle is always 180 degrees.</string>
+    <string name="question_history">The Great Wall of China was built during the Ming Dynasty.</string>
+    <string name="question_geography">Mount Everest is the highest mountain in the world.</string>
+    <string name="question_politics">The United Nations was founded in 1945.</string>
+    <string name="question_technology">The first programmable computer was developed in the 1940s.</string>
+    <string name="question_biology">Humans have 206 bones in their bodies.</string>
+    <string name="question_physics">Light travels faster than sound.</string>
+    <string name="question_chemistry">The chemical symbol for gold is Au.</string>
+    <string name="question_literature">William Shakespeare wrote "Hamlet."</string>
+    <string name="question_art">Vincent van Gogh painted "Starry Night."</string>
+    <string name="question_music">Ludwig van Beethoven was a famous composer.</string>
+    <string name="question_sports">The Olympic Games are held every four years.</string>
+    <string name="question_movies">"Titanic" won the Academy Award for Best Picture in 1998.</string>
+    <string name="question_animals">Elephants are the largest land animals on Earth.</string>
+    <string name="question_languages">Mandarin Chinese is the most spoken language in the world.</string>
+    <string name="question_fiction">Harry Potter is a book series written by J.R.R. Tolkien.</string>
+    <string name="question_inventions">The telephone was invented by Thomas Edison.</string>
+    <string name="question_food">Sushi originated in South America.</string>
+    <string name="question_planets">Mercury is the largest planet in our solar system.</string>
+    <string name="question_history2">The Eiffel Tower was built in the 18th century.</string>
+    <string name="question_languages2">French is the official language of Brazil.</string>
+    <string name="question_math2">Pi is a rational number.</string>
+    <string name="question_animals2">Penguins can fly.</string>
+    <string name="question_music2">Michael Jackson composed the song "Imagine".</string>
+    <string name="question_sports2">Cycling is not an Olympic sport.</string>
+
+
+
 </resources>

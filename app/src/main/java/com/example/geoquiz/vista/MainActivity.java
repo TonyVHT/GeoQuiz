@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mFalseButton;
     private Button mNextButton;
     private TextView mQuestionTextView;
-    private int mRandomNumber;
+    private Integer mRandomNumber;
 private Question []mQuestionBank;
     private int mCurrentIndex;
     @Override
@@ -44,15 +44,19 @@ private Question []mQuestionBank;
         mNextButton= (Button) findViewById(R.id.btn_next);
         clickNextButton();
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        Random randomGen = new Random();
-        mRandomNumber = randomGen.nextInt(mQuestionBank.length);
-        
+        updateQuestion();
     }
     public void clickTrueButton(){
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+                int messageResId;
+                if(verifyAnswer(true)){
+                    messageResId = R.string.correct_toast;
+                }else{
+                    messageResId = R.string.incorrect_toast;
+                }
+                Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -60,7 +64,13 @@ private Question []mQuestionBank;
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+                int messageResId;
+                if(verifyAnswer(false)){
+                    messageResId = R.string.correct_toast;
+                }else{
+                    messageResId = R.string.incorrect_toast;
+                }
+                Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -68,7 +78,7 @@ private Question []mQuestionBank;
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                updateQuestion();
             }
         });
     }
@@ -78,7 +88,53 @@ private Question []mQuestionBank;
                 new Question(R.string.question_mideast, false),
                 new Question(R.string.question_africa, false),
                 new Question(R.string.question_americas, true),
-                new Question(R.string.question_asia, true)
+                new Question(R.string.question_asia, true),
+                new Question(R.string.question_europe, true),
+                new Question(R.string.question_antarctica, true),
+                new Question(R.string.question_australia, true),
+                new Question(R.string.question_space, true),
+                new Question(R.string.question_science, true),
+                new Question(R.string.question_math, true),
+                new Question(R.string.question_history, true),
+                new Question(R.string.question_geography, true),
+                new Question(R.string.question_politics, true),
+                new Question(R.string.question_technology, true),
+                new Question(R.string.question_biology, true),
+                new Question(R.string.question_physics, true),
+                new Question(R.string.question_chemistry, true),
+                new Question(R.string.question_literature, true),
+                new Question(R.string.question_art, true),
+                new Question(R.string.question_music, true),
+                new Question(R.string.question_sports, true),
+                new Question(R.string.question_movies, true),
+                new Question(R.string.question_animals, true),
+                new Question(R.string.question_languages, true),
+                new Question(R.string.question_fiction, false),
+                new Question(R.string.question_inventions, false),
+                new Question(R.string.question_food, false),
+                new Question(R.string.question_planets, false),
+                new Question(R.string.question_history2, false),
+                new Question(R.string.question_languages2, false),
+                new Question(R.string.question_math2, false),
+                new Question(R.string.question_animals2, false),
+                new Question(R.string.question_music2, false),
+                new Question(R.string.question_sports2, false)
         };
+    }
+    public void updateQuestion(){
+        mRandomNumber = genNewRandonNumber();
+        mQuestionTextView.setText(mQuestionBank[mRandomNumber].getmRestId());
+    }
+    public int genNewRandonNumber(){
+        if(mRandomNumber == null) mRandomNumber = 0;
+        Random genRandom = new Random();
+        int random = genRandom.nextInt(mQuestionBank.length);
+        while(random == mRandomNumber){
+            random = genRandom.nextInt(mQuestionBank.length);
+        }
+        return random;
+    }
+    public boolean verifyAnswer(boolean answer){
+        return answer == mQuestionBank[mRandomNumber].isAnswerTrue();
     }
 }
