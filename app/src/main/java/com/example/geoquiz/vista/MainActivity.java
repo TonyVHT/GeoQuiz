@@ -122,12 +122,9 @@ private Question []mQuestionBank;
         }
         return random;
     }
-    public boolean verifyAnswer(boolean answer){
-        return answer == mQuestionBank[mRandomNumber].isAnswerTrue();
-    }
     public void checkAnswer(boolean answer){
         int messageResId;
-        if(verifyAnswer(answer)){
+        if(answer == mQuestionBank[mRandomNumber].isAnswerTrue()){
             messageResId = R.string.correct_toast;
         }else{
             messageResId = R.string.incorrect_toast;
