@@ -1,9 +1,7 @@
-package com.example.geoquiz.controlador;
+package com.example.geoquiz.pojo;
 
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.geoquiz.R;
 
 public class Question {
     private int mRestId;

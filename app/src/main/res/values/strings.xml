@@ -6,6 +6,10 @@
     <string name="incorrect_toast">Incorrect!</string>
     <string name="actionSetting">Setting</string>
     <string name="next_button">NEXT</string>
+    <string name="prev_button">PREV</string>
+    <string name="prev_message">No prev questions</string>
+    <string name="toast_empty_question">No more questions</string>
+    <!--Questions-->
     <string name="question_oceans">The Pacific Ocean is larger than the Atlantic Ocean.</string>
     <string name="question_mideast">The Suez Canal connects the Red Sea and the Indian Ocean.</string>
     <string name="question_africa">The source of the Nile River is in Egypt.</string>
@@ -41,7 +45,4 @@
     <string name="question_animals2">Penguins can fly.</string>
     <string name="question_music2">Michael Jackson composed the song "Imagine".</string>
     <string name="question_sports2">Cycling is not an Olympic sport.</string>
-
-
-
 </resources>

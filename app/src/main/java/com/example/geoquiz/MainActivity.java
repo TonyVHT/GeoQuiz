@@ -1,9 +1,9 @@
-package com.example.geoquiz.vista;
+package com.example.geoquiz;
 
-import com.example.geoquiz.R;
-import com.example.geoquiz.controlador.Question;
+import com.example.geoquiz.pojo.Question;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Random;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,13 +24,13 @@ public class MainActivity extends AppCompatActivity {
     private Button mFalseButton;
     private Button mNextButton;
     private TextView mQuestionTextView;
-    private Integer mRandomNumber;
-private Question []mQuestionBank;
-    private int mCurrentIndex;
+    private Stack<Integer> mStackIndex;
+    private Button mPrevButton;
+    private Question[] mQuestionBank;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inicializarQuestionBank();
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -37,50 +38,18 @@ private Question []mQuestionBank;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        mTrueButton = (Button) findViewById(R.id.btn_true);
-        clickTrueButton();
-        mFalseButton =(Button) findViewById(R.id.btn_false);
-        clickFalseButton();
-        mNextButton= (Button) findViewById(R.id.btn_next);
-        clickNextButton();
-        mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        clickTextViewQuestion();
-        updateQuestion();
+        inicializarQuestionBank();
+        inicializarWidGetsId();
+        setCurrentIndex();
+        setListenerPrevButton();
+        setListenerNextButton();
+        setListenerTextView();
+        setListenerFalseButton();
+        setListenerTrueButton();
     }
-    public void clickTrueButton(){
-        mTrueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               checkAnswer(true);
-            }
-        });
-    }
-    public void clickFalseButton(){
-        mFalseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer(false);
-            }
-        });
-    }
-    public void clickNextButton(){
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateQuestion();
-            }
-        });
-    }
-    public void clickTextViewQuestion(){
-        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateQuestion();
-            }
-        });
-    }
-    public void inicializarQuestionBank(){
-        mQuestionBank = new Question[] {
+
+    public void inicializarQuestionBank() {
+        mQuestionBank = new Question[]{
                 new Question(R.string.question_oceans, true),
                 new Question(R.string.question_mideast, false),
                 new Question(R.string.question_africa, false),
@@ -118,26 +87,74 @@ private Question []mQuestionBank;
                 new Question(R.string.question_sports2, false)
         };
     }
-    public void updateQuestion(){
-        mRandomNumber = genNewRandonNumber();
-        mQuestionTextView.setText(mQuestionBank[mRandomNumber].getmRestId());
+
+    public void inicializarWidGetsId(){
+        mPrevButton = findViewById(R.id.btn_prev);
+        mTrueButton = findViewById(R.id.btn_true);
+        mFalseButton = findViewById(R.id.btn_false);
+        mNextButton = findViewById(R.id.btn_next);
+        mQuestionTextView = findViewById(R.id.question_text_view);
+        mStackIndex = new Stack<>();
     }
-    public int genNewRandonNumber(){
-        if(mRandomNumber == null) mRandomNumber = 0;
-        Random genRandom = new Random();
-        int random = genRandom.nextInt(mQuestionBank.length);
-        while(random == mRandomNumber){
-            random = genRandom.nextInt(mQuestionBank.length);
-        }
-        return random;
+    public void setListenerPrevButton(){
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLastIndex();
+            }
+        });
     }
-    public void checkAnswer(boolean answer){
-        int messageResId;
-        if(answer == mQuestionBank[mRandomNumber].isAnswerTrue()){
-            messageResId = R.string.correct_toast;
+    public void setListenerNextButton(){
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCurrentIndex();
+            }
+        });
+    }
+    public void setListenerTextView(){
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCurrentIndex();
+            }
+        });
+    }
+    public void setListenerTrueButton(){
+        mTrueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCorrectAnswer(true);
+            }
+        });
+    }
+    public void setListenerFalseButton(){
+        mFalseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCorrectAnswer(false);
+            }
+        });
+    }
+    public void setCurrentIndex(){
+       Random randomNumber = new Random();
+       int number = randomNumber.nextInt(mQuestionBank.length);
+       mQuestionTextView.setText(mQuestionBank[number].getmRestId());
+       mStackIndex.push(number);
+    }
+    public void setLastIndex(){
+        if(mStackIndex.size() >= 2){
+            mStackIndex.pop();
+            mQuestionTextView.setText(mQuestionBank[mStackIndex.peek()].getmRestId());
         }else{
-            messageResId = R.string.incorrect_toast;
+            Toast.makeText(MainActivity.this, R.string.toast_empty_question, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(MainActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+    public void isCorrectAnswer(boolean answer){
+        if(mQuestionBank[mStackIndex.peek()].isAnswerTrue() == answer){
+            Toast.makeText(MainActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 }
