@@ -27,9 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private Stack<Integer> mStackIndex;
     private Button mPrevButton;
     private Question[] mQuestionBank;
-
+    public static final String TAG = "QuizActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "On Create");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -156,5 +157,30 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "On Start");
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG, "on Pause");
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "on Resume");
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(TAG, "on Stop");
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "on Destroy");
     }
 }
