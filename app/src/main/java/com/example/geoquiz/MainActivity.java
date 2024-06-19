@@ -15,11 +15,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String KEY_INDEX = "INDEX";
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "QuizActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "On Create");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -39,14 +41,28 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        inicializarQuestionBank();
         inicializarWidGetsId();
-        setCurrentIndex();
+        inicializarQuestionBank();
         setListenerPrevButton();
         setListenerNextButton();
         setListenerTextView();
         setListenerFalseButton();
         setListenerTrueButton();
+        if(savedInstanceState != null){
+            ArrayList<Integer> listaRecuperada = savedInstanceState.getIntegerArrayList(KEY_INDEX);
+            if (listaRecuperada != null) {
+                mStackIndex.addAll(listaRecuperada);
+            }
+            setTextViewQuestionOnSave();
+        }else{
+            setCurrentIndex();
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        ArrayList<Integer> listaIndex = new ArrayList<Integer>(mStackIndex);
+        savedInstanceState.putIntegerArrayList(KEY_INDEX, listaIndex);
     }
 
     public void inicializarQuestionBank() {
@@ -182,5 +198,8 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         Log.d(TAG, "on Destroy");
+    }
+    public void setTextViewQuestionOnSave(){
+        mQuestionTextView.setText(mQuestionBank[mStackIndex.peek()].getmRestId());
     }
 }
