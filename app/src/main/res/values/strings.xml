@@ -9,6 +9,10 @@
     <string name="prev_button">PREV</string>
     <string name="prev_message">No prev questions</string>
     <string name="toast_empty_question">No more questions</string>
+    <string name="toast_warning_cheat">Cheat is wrong!</string>
+    <string name="btn_show_answer">Show Answer</string>
+    <string name="btn_cheat">Cheat~</string>
+    <string name="toast_judgment">Cheat is wrong, pa</string>
     <!--Questions-->
     <string name="question_oceans">The Pacific Ocean is larger than the Atlantic Ocean.</string>
     <string name="question_mideast">The Suez Canal connects the Red Sea and the Indian Ocean.</string>
