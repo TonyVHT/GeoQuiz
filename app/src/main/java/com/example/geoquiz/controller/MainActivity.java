@@ -1,7 +1,9 @@
-package com.example.geoquiz;
+package com.example.geoquiz.controller;
 
+import com.example.geoquiz.R;
 import com.example.geoquiz.pojo.Question;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +18,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String KEY_ANSWER = "com.example.geoquiz.answer";
+    private static final String KEY_QUESTION = "com.example.geoquiz.question";
+    private static final String KEY_CHEATER = "com.example.geoquiz.cheater";
     private static final String KEY_INDEX = "INDEX";
     private Button mTrueButton;
     private Button mFalseButton;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Stack<Integer> mStackIndex;
     private Button mPrevButton;
     private Question[] mQuestionBank;
+    private Button mCheatButton;
     public static final String TAG = "QuizActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setListenerTextView();
         setListenerFalseButton();
         setListenerTrueButton();
+        setListenerCheatButton();
         if(savedInstanceState != null){
             ArrayList<Integer> listaRecuperada = savedInstanceState.getIntegerArrayList(KEY_INDEX);
             if (listaRecuperada != null) {
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             setCurrentIndex();
         }
+
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
@@ -112,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         mNextButton = findViewById(R.id.btn_next);
         mQuestionTextView = findViewById(R.id.question_text_view);
         mStackIndex = new Stack<>();
+        mCheatButton = findViewById(R.id.btn_go_cheat);
     }
     public void setListenerPrevButton(){
         mPrevButton.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +158,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isCorrectAnswer(false);
+            }
+        });
+    }
+    public void setListenerCheatButton(){
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newActivityCheat = new Intent(MainActivity.this, CheatActivity.class);
+                newActivityCheat.putExtra(KEY_ANSWER, mQuestionBank[mStackIndex.peek()].isAnswerTrue());
+                newActivityCheat.putExtra(KEY_QUESTION, mQuestionBank[mStackIndex.peek()].getmRestId());
+                startActivity(newActivityCheat);
             }
         });
     }
@@ -201,5 +220,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setTextViewQuestionOnSave(){
         mQuestionTextView.setText(mQuestionBank[mStackIndex.peek()].getmRestId());
+    }
+    public void verifyCheating(){
+        boolean cheater = getIntent().getBooleanExtra(KEY_CHEATER, false);
+        if(cheater) {
+            Toast.makeText(MainActivity.this, R.string.toast_judgment, Toast.LENGTH_SHORT).show();
+        }
     }
 }
