@@ -5,6 +5,7 @@ import static com.example.geoquiz.Utils.Utilidades.KEY_CHEATER;
 import static com.example.geoquiz.Utils.Utilidades.KEY_INDEX;
 import static com.example.geoquiz.Utils.Utilidades.KEY_IS_CHEATING;
 import static com.example.geoquiz.Utils.Utilidades.KEY_QUESTION;
+import static com.example.geoquiz.Utils.Utilidades.KEY_USER_IS_CHEATING;
 
 import com.example.geoquiz.R;
 import com.example.geoquiz.Utils.Utilidades;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -32,6 +34,7 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
+    private boolean mUserIsCheating;
     private ActivityResultLauncher<Bundle> mResultLauncherCheat;
     private Button mTrueButton;
     private Button mFalseButton;
@@ -61,22 +64,26 @@ public class MainActivity extends AppCompatActivity {
         setListenerFalseButton();
         setListenerTrueButton();
         setListenerCheatButton();
+        mUserIsCheating = false;
         if(savedInstanceState != null){
             ArrayList<Integer> listaRecuperada = savedInstanceState.getIntegerArrayList(KEY_INDEX);
             if (listaRecuperada != null) {
                 mStackIndex.addAll(listaRecuperada);
             }
             setTextViewQuestionOnSave();
+            mUserIsCheating = savedInstanceState.getBoolean(KEY_USER_IS_CHEATING);
+            Log.d("Cheater User", Boolean.toString(mUserIsCheating));
         }else{
             setCurrentIndex();
         }
 
     }
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         ArrayList<Integer> listaIndex = new ArrayList<Integer>(mStackIndex);
         savedInstanceState.putIntegerArrayList(KEY_INDEX, listaIndex);
+        savedInstanceState.putBoolean(KEY_USER_IS_CHEATING, mUserIsCheating);
     }
 
     public void inicializarQuestionBank() {
@@ -132,7 +139,11 @@ public class MainActivity extends AppCompatActivity {
         mResultLauncherCheat = registerForActivityResult(new CheatActivityContract(), result ->{
             if(result != null){
                 boolean isCheating = result.getBoolean(KEY_IS_CHEATING);
+                if(!mUserIsCheating){
+                    mUserIsCheating = isCheating;
+                }
                 Log.d("cheating debug", Boolean.toString(isCheating));
+                Log.d("cheating debug user", Boolean.toString(mUserIsCheating));
                 if(isCheating){
                     Toast.makeText(MainActivity.this, R.string.toast_judgment, Toast.LENGTH_SHORT).show();
                 }
