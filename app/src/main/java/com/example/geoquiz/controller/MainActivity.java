@@ -1,6 +1,14 @@
 package com.example.geoquiz.controller;
 
+import static com.example.geoquiz.Utils.Utilidades.KEY_ANSWER;
+import static com.example.geoquiz.Utils.Utilidades.KEY_CHEATER;
+import static com.example.geoquiz.Utils.Utilidades.KEY_INDEX;
+import static com.example.geoquiz.Utils.Utilidades.KEY_IS_CHEATING;
+import static com.example.geoquiz.Utils.Utilidades.KEY_QUESTION;
+
 import com.example.geoquiz.R;
+import com.example.geoquiz.Utils.Utilidades;
+import com.example.geoquiz.pojo.CheatActivityContract;
 import com.example.geoquiz.pojo.Question;
 
 import android.content.Intent;
@@ -12,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,11 +32,7 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String KEY_ANSWER = "com.example.geoquiz.answer";
-    private static final String KEY_QUESTION = "com.example.geoquiz.question";
-    private static final String KEY_CHEATER = "com.example.geoquiz.cheater";
-    private static final String KEY_INDEX = "INDEX";
+    private ActivityResultLauncher<Bundle> mResultLauncherCheat;
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        inicializarResultLauncherCheat();
         inicializarWidGetsId();
         inicializarQuestionBank();
         setListenerPrevButton();
@@ -121,6 +128,17 @@ public class MainActivity extends AppCompatActivity {
         mStackIndex = new Stack<>();
         mCheatButton = findViewById(R.id.btn_go_cheat);
     }
+    public void inicializarResultLauncherCheat(){
+        mResultLauncherCheat = registerForActivityResult(new CheatActivityContract(), result ->{
+            if(result != null){
+                boolean isCheating = result.getBoolean(KEY_IS_CHEATING);
+                Log.d("cheating debug", Boolean.toString(isCheating));
+                if(isCheating){
+                    Toast.makeText(MainActivity.this, R.string.toast_judgment, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     public void setListenerPrevButton(){
         mPrevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,10 +183,10 @@ public class MainActivity extends AppCompatActivity {
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newActivityCheat = new Intent(MainActivity.this, CheatActivity.class);
-                newActivityCheat.putExtra(KEY_ANSWER, mQuestionBank[mStackIndex.peek()].isAnswerTrue());
-                newActivityCheat.putExtra(KEY_QUESTION, mQuestionBank[mStackIndex.peek()].getmRestId());
-                startActivity(newActivityCheat);
+                Bundle bundleToCheat = new Bundle();
+                bundleToCheat.putInt(KEY_QUESTION, mQuestionBank[mStackIndex.peek()].getmRestId());
+                bundleToCheat.putBoolean(KEY_ANSWER, mQuestionBank[mStackIndex.peek()].isAnswerTrue());
+                mResultLauncherCheat.launch(bundleToCheat);
             }
         });
     }
@@ -193,38 +211,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
         }
     }
-    @Override
-    public void onStart(){
-        super.onStart();
-        Log.d(TAG, "On Start");
-    }
-    @Override
-    public void onPause(){
-        super.onPause();
-        Log.d(TAG, "on Pause");
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "on Resume");
-    }
-    @Override
-    public void onStop(){
-        super.onStop();
-        Log.d(TAG, "on Stop");
-    }
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(TAG, "on Destroy");
-    }
     public void setTextViewQuestionOnSave(){
         mQuestionTextView.setText(mQuestionBank[mStackIndex.peek()].getmRestId());
-    }
-    public void verifyCheating(){
-        boolean cheater = getIntent().getBooleanExtra(KEY_CHEATER, false);
-        if(cheater) {
-            Toast.makeText(MainActivity.this, R.string.toast_judgment, Toast.LENGTH_SHORT).show();
-        }
     }
 }

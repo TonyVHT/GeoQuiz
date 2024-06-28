@@ -1,5 +1,11 @@
 package com.example.geoquiz.controller;
 
+import static com.example.geoquiz.Utils.Utilidades.KEY_ANSWER;
+import static com.example.geoquiz.Utils.Utilidades.KEY_IS_CHEATING;
+import static com.example.geoquiz.Utils.Utilidades.KEY_QUESTION;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.contract.ActivityResultContract;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,14 +27,11 @@ import org.w3c.dom.Text;
 
 public class CheatActivity extends AppCompatActivity {
 
-    private static final String KEY_ANSWER = "com.example.geoquiz.answer";
-    private static final String KEY_QUESTION ="com.example.geoquiz.question";
-    private static final String KEY_IS_CHEATER = "com.example.geoquiz.cheater";
     private Button mBtnCheat;
     private TextView mTvAnswer;
     private TextView mTvQuestion;
     private Button mBtnBack;
-    private boolean isCheater;
+    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,8 @@ public class CheatActivity extends AppCompatActivity {
         });
         setIdWidGets();
         setListenerBtnCheat();
-        isCheater = false;
+        setListenerBtnBack();
+        mIsCheater = false;
     }
     public void setIdWidGets(){
         mBtnCheat = findViewById(R.id.btn_cheat);
@@ -54,19 +58,13 @@ public class CheatActivity extends AppCompatActivity {
         mBtnCheat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean answer = getIntent().getBooleanExtra(KEY_ANSWER, false);
+                mIsCheater = true;
+                boolean answerQuestion = getIntent().getBooleanExtra(KEY_ANSWER, false);
                 int resIdQuestion = getIntent().getIntExtra(KEY_QUESTION, -1);
-                if(answer){
-                    mTvAnswer.setText(R.string.text_view_answer_true);
-                }else{
-                    mTvAnswer.setText(R.string.text_view_answer_false);
-                }
                 if(resIdQuestion != -1){
-                    mTvQuestion.setText(resIdQuestion);
-                }else{
-                    Toast.makeText(CheatActivity.this, "No question found", Toast.LENGTH_SHORT).show();
+                    mTvAnswer.setText(Boolean.toString(answerQuestion));
+                    mTvQuestion.setText(getString(resIdQuestion));
                 }
-                isCheater = true;
             }
         });
     }
@@ -74,10 +72,12 @@ public class CheatActivity extends AppCompatActivity {
         mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newActivityMain = new Intent(CheatActivity.this, MainActivity.class);
-                newActivityMain.putExtra(KEY_IS_CHEATER, isCheater);
-                //TODO establecer contrato
-                //ActivityResultContract
+                Intent resultIntent = new Intent();
+                Bundle resultBundle = new Bundle();
+                resultBundle.putBoolean(KEY_IS_CHEATING, mIsCheater);
+                resultIntent.putExtras(resultBundle);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
     }
