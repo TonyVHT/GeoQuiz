@@ -74,5 +74,10 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/tv_android_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"/>
 </LinearLayout>

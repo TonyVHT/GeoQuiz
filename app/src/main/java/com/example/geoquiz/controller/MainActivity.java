@@ -13,6 +13,7 @@ import com.example.geoquiz.pojo.CheatActivityContract;
 import com.example.geoquiz.pojo.Question;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,7 @@ import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
+    private TextView mTvAndroidVersion;
     private boolean mUserIsCheating;
     private ActivityResultLauncher<Bundle> mResultLauncherCheat;
     private Button mTrueButton;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setListenerFalseButton();
         setListenerTrueButton();
         setListenerCheatButton();
+        setTvAndroidVersion();
         mUserIsCheating = false;
         getDataSavedInstance(savedInstanceState);
     }
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         mQuestionTextView = findViewById(R.id.question_text_view);
         mStackIndex = new Stack<>();
         mCheatButton = findViewById(R.id.btn_go_cheat);
+        mTvAndroidVersion = findViewById(R.id.tv_android_version);
     }
     public void getDataSavedInstance(Bundle savedInstanceState){
         if(savedInstanceState != null){
@@ -227,5 +231,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setTextViewQuestionOnSave(){
         mQuestionTextView.setText(mQuestionBank[mStackIndex.peek()].getmRestId());
+    }
+    public void setTvAndroidVersion(){
+        mTvAndroidVersion.setText(getString(R.string.api_lvl, Build.VERSION.SDK_INT));
     }
 }
