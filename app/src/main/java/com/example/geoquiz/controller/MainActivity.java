@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -65,18 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setListenerTrueButton();
         setListenerCheatButton();
         mUserIsCheating = false;
-        if(savedInstanceState != null){
-            ArrayList<Integer> listaRecuperada = savedInstanceState.getIntegerArrayList(KEY_INDEX);
-            if (listaRecuperada != null) {
-                mStackIndex.addAll(listaRecuperada);
-            }
-            setTextViewQuestionOnSave();
-            mUserIsCheating = savedInstanceState.getBoolean(KEY_USER_IS_CHEATING);
-            Log.d("Cheater User", Boolean.toString(mUserIsCheating));
-        }else{
-            setCurrentIndex();
-        }
-
+        getDataSavedInstance(savedInstanceState);
     }
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState){
@@ -85,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putIntegerArrayList(KEY_INDEX, listaIndex);
         savedInstanceState.putBoolean(KEY_USER_IS_CHEATING, mUserIsCheating);
     }
-
     public void inicializarQuestionBank() {
         mQuestionBank = new Question[]{
                 new Question(R.string.question_oceans, true),
@@ -134,6 +124,19 @@ public class MainActivity extends AppCompatActivity {
         mQuestionTextView = findViewById(R.id.question_text_view);
         mStackIndex = new Stack<>();
         mCheatButton = findViewById(R.id.btn_go_cheat);
+    }
+    public void getDataSavedInstance(Bundle savedInstanceState){
+        if(savedInstanceState != null){
+            ArrayList<Integer> listaRecuperada = savedInstanceState.getIntegerArrayList(KEY_INDEX);
+            if (listaRecuperada != null) {
+                mStackIndex.addAll(listaRecuperada);
+            }
+            setTextViewQuestionOnSave();
+            mUserIsCheating = savedInstanceState.getBoolean(KEY_USER_IS_CHEATING);
+            Log.d("Cheater User", Boolean.toString(mUserIsCheating));
+        }else{
+            setCurrentIndex();
+        }
     }
     public void inicializarResultLauncherCheat(){
         mResultLauncherCheat = registerForActivityResult(new CheatActivityContract(), result ->{

@@ -7,12 +7,15 @@ import static com.example.geoquiz.Utils.Utilidades.KEY_IS_CHEATING;
 import static com.example.geoquiz.Utils.Utilidades.KEY_QUESTION;
 import static com.example.geoquiz.Utils.Utilidades.KEY_USER_IS_CHEATING;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +96,7 @@ public class CheatActivity extends AppCompatActivity {
                     mTvAnswer.setText(Boolean.toString(answerQuestion));
                     mTvQuestion.setText(getString(resIdQuestion));
                 }
+                animacionBtnCheat();
             }
         });
     }
@@ -112,4 +116,19 @@ public class CheatActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
+    public void animacionBtnCheat(){
+        int xPos = mBtnCheat.getWidth() / 2;
+        int yPos = mBtnCheat.getHeight() / 2;
+        float radious = Math.max(mBtnCheat.getWidth(), mBtnCheat.getHeight()) / 2f;
+        Animator animationBtnCheat = ViewAnimationUtils.createCircularReveal(mBtnCheat, xPos, yPos, radious, 0);
+        animationBtnCheat.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mBtnCheat.setVisibility(View.INVISIBLE);
+            }
+        });
+        animationBtnCheat.start();
+    }
+
 }
